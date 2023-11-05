@@ -2,6 +2,18 @@
 
 #define TAG "ShapShupSceneLoadFile"
 
+static bool shapshup_scene_load_file_callback(
+    FuriString* path,
+    void* context,
+    uint8_t** icon_ptr,
+    FuriString* item_name) {
+    furi_assert(context);
+    ShapShupState* instance = (ShapShupState*)context;
+
+    return flipper_application_load_name_and_icon(
+        path, loader_applications_app->storage, icon_ptr, item_name);
+}
+
 void shapshup_scene_load_file_on_enter(void* context) {
     furi_assert(context);
     ShapShupState* instance = (ShapShupState*)context;
@@ -17,8 +29,15 @@ void shapshup_scene_load_file_on_enter(void* context) {
     bool res = true;
     furi_string_printf(file_path, "%s", "/ext/subghz/temp/Light_All_On.sub");
 #else
-    DialogsFileBrowserOptions browser_options;
-    dialog_file_browser_set_basic_options(&browser_options, SHAPSHUP_FILE_EXT, &I_sub1_10px);
+    const DialogsFileBrowserOptions browser_options = {
+        .extension = SHAPSHUP_FILE_EXT,
+        .skip_assets = true,
+        .icon = &I_sub1_10px,
+        .hide_ext = true,
+        .item_loader_callback = shapshup_scene_load_file_callback,
+        .item_loader_context = instance,
+        .base_path = SHAPSHUP_PATH,
+    };
 
     bool res =
         dialog_file_browser_show(instance->dialogs, file_path, app_folder, &browser_options);
