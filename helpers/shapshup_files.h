@@ -1,4 +1,5 @@
 #pragma once
+
 #include <furi.h>
 #include "m-array.h"
 #include <toolbox/path.h>
@@ -51,7 +52,7 @@ typedef struct {
  * @param file_path 
  * @return ShapShupRawFile* 
  */
-ShapShupRawFile* load_file_shapshup(const char* file_path);
+ShapShupRawFile *load_file_shapshup(const char *file_path);
 
 /**
  * @brief read_int32_shapshup
@@ -61,7 +62,7 @@ ShapShupRawFile* load_file_shapshup(const char* file_path);
  * @param data_size size of data to read
  * @return true/false
  */
-bool read_int32_shapshup(Stream* stream, int32_t* _data, uint16_t data_size);
+bool read_int32_shapshup(Stream *stream, int32_t *_data, uint16_t data_size);
 
 /**
  * @brief get description about file operation
@@ -69,11 +70,11 @@ bool read_int32_shapshup(Stream* stream, int32_t* _data, uint16_t data_size);
  * @param result_code struct @see ShapShupFileResults
  * @return human readable description about result code
  */
-const char* shapshup_files_result_description(ShapShupFileResults result_code);
+const char *shapshup_files_result_description(ShapShupFileResults result_code);
 
 /**
  * @brief make clean of array to read new values
  * 
  * @param raw_file @see ShapShupRawFile
  */
-void clean_raw_values(ShapShupRawFile* raw_file);
+void clean_raw_values(ShapShupRawFile *raw_file);

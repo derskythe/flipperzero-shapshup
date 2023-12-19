@@ -1,7 +1,7 @@
 #include "gui_top_buttons.h"
 
-void elements_button_top_left(Canvas* canvas, const char* str) {
-    const Icon* icon = &I_ButtonUp_7x4;
+void elements_button_top_left(Canvas *canvas, const char *str) {
+    const Icon *icon = &I_ButtonUp_7x4;
 
     const uint8_t button_height = 12;
     const uint8_t vertical_offset = 3;
@@ -25,12 +25,12 @@ void elements_button_top_left(Canvas* canvas, const char* str) {
     canvas_invert_color(canvas);
     canvas_draw_icon(canvas, x + horizontal_offset, y - icon_v_offset, icon);
     canvas_draw_str(
-        canvas, x + horizontal_offset + icon_width_with_offset, y - vertical_offset, str);
+            canvas, x + horizontal_offset + icon_width_with_offset, y - vertical_offset, str);
     canvas_invert_color(canvas);
 }
 
-void elements_button_top_right(Canvas* canvas, const char* str) {
-    const Icon* icon = &I_ButtonDown_7x4;
+void elements_button_top_right(Canvas *canvas, const char *str) {
+    const Icon *icon = &I_ButtonDown_7x4;
 
     const uint8_t button_height = 12;
     const uint8_t vertical_offset = 3;
@@ -54,6 +54,6 @@ void elements_button_top_right(Canvas* canvas, const char* str) {
     canvas_invert_color(canvas);
     canvas_draw_str(canvas, x - button_width + horizontal_offset, y - vertical_offset, str);
     canvas_draw_icon(
-        canvas, x - horizontal_offset - icon_get_width(icon), y - icon_v_offset, icon);
+            canvas, x - horizontal_offset - icon_get_width(icon), y - icon_v_offset, icon);
     canvas_invert_color(canvas);
 }

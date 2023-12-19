@@ -68,15 +68,15 @@ typedef struct {
  * 
  */
 struct ShapShupMainView {
-    View* view;
+    View *view;
     ShapShupMainViewCallback callback;
-    ShapShupRawFile* raw_file;
+    ShapShupRawFile *raw_file;
     uint64_t offset;
     float scale;
-    ShapShupShapeStruct* shape_list;
+    ShapShupShapeStruct *shape_list;
     uint8_t count_shapes;
     uint64_t alert_dismiss_time;
-    void* context;
+    void *context;
 };
 
 /**
@@ -99,8 +99,8 @@ typedef struct {
     uint64_t calc_total_len;
     bool is_ms;
     float scale;
-    ShapShupRawFile* raw_file;
-    ShapShupShapeStruct* shape_list;
+    ShapShupRawFile *raw_file;
+    ShapShupShapeStruct *shape_list;
     uint8_t count_shapes;
     uint64_t alert_dismiss_time;
     char alert_text[SHAPSHUP_TEXT_STORE_SIZE];
@@ -113,14 +113,14 @@ typedef struct {
  * @param text to show
  * @param ttl TTL value
  */
-void shapshup_main_view_show_alert(ShapShupMainView* instance, const char* text, uint32_t ttl);
+void shapshup_main_view_show_alert(ShapShupMainView *instance, const char *text, uint32_t ttl);
 
 /**
  * @brief shapshup_main_view_reset_alert
  * 
  * @param instance ShapShupMainView*
  */
-void shapshup_main_view_reset_alert(ShapShupMainView* instance);
+void shapshup_main_view_reset_alert(ShapShupMainView *instance);
 
 /**
  * @brief shapshup_main_view_draw_alert_if_needed
@@ -128,7 +128,7 @@ void shapshup_main_view_reset_alert(ShapShupMainView* instance);
  * @param canvas 
  * @param model 
  */
-void shapshup_main_view_draw_alert_if_needed(Canvas* canvas, ShapShupMainViewModel* model);
+void shapshup_main_view_draw_alert_if_needed(Canvas *canvas, ShapShupMainViewModel *model);
 
 /**
  * @brief shapshup_main_view_draw
@@ -136,7 +136,7 @@ void shapshup_main_view_draw_alert_if_needed(Canvas* canvas, ShapShupMainViewMod
  * @param canvas Canvas*
  * @param model  ShapShupMainViewModel*
  */
-void shapshup_main_view_draw(Canvas* canvas, ShapShupMainViewModel* model);
+void shapshup_main_view_draw(Canvas *canvas, ShapShupMainViewModel *model);
 
 /**
  * @brief shapshup_main_view_draw_scale
@@ -144,7 +144,7 @@ void shapshup_main_view_draw(Canvas* canvas, ShapShupMainViewModel* model);
  * @param canvas Canvas*
  * @param model  ShapShupMainViewModel*
  */
-void shapshup_main_view_draw_scale(Canvas* canvas, ShapShupMainViewModel* model);
+void shapshup_main_view_draw_scale(Canvas *canvas, ShapShupMainViewModel *model);
 
 /**
  * @brief calc_offset_per_page
@@ -162,7 +162,7 @@ uint64_t calc_offset_per_page(uint64_t total, uint64_t min_len, float scale);
  * @param n numbver
  * @param out output value
  */
-void format_number(uint64_t n, char* out);
+void format_number(uint64_t n, char *out);
 
 /**
  * @brief format frequency to show
@@ -170,7 +170,7 @@ void format_number(uint64_t n, char* out);
  * @param frequency frequency
  * @param output_buffer output value
  */
-void format_frequency(uint32_t frequency, char* output_buffer);
+void format_frequency(uint32_t frequency, char *output_buffer);
 
 /**
  * @brief shapshup_main_view_input
@@ -180,28 +180,28 @@ void format_frequency(uint32_t frequency, char* output_buffer);
  * @return true 
  * @return false 
  */
-bool shapshup_main_view_input(InputEvent* event, void* context);
+bool shapshup_main_view_input(InputEvent *event, void *context);
 
 /**
  * @brief shapshup_main_view_enter
  * 
  * @param context 
  */
-void shapshup_main_view_enter(void* context);
+void shapshup_main_view_enter(void *context);
 
 /**
  * @brief shapshup_main_view_exit
  * 
  * @param context 
  */
-void shapshup_main_view_exit(void* context);
+void shapshup_main_view_exit(void *context);
 
 /**
  * @brief shapshup_main_view_array_reset
  * 
  * @param instance ShapShupMainView*
  */
-void shapshup_main_view_array_reset(ShapShupMainView* instance);
+void shapshup_main_view_array_reset(ShapShupMainView *instance);
 
 /**
  * @brief shapshup_main_view_create_shapes
@@ -209,4 +209,4 @@ void shapshup_main_view_array_reset(ShapShupMainView* instance);
  * @param instance ShapShupMainView*
  * @param offset_per_page 
  */
-void shapshup_main_view_create_shapes(ShapShupMainView* instance, uint64_t offset_per_page);
+void shapshup_main_view_create_shapes(ShapShupMainView *instance, uint64_t offset_per_page);

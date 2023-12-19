@@ -12,7 +12,7 @@
  * @brief ShapShupMainViewCallback
  * 
  */
-typedef void (*ShapShupMainViewCallback)(ShapshupCustomEvent event, void* context);
+typedef void (*ShapShupMainViewCallback)(ShapshupCustomEvent event, void *context);
 
 /**
  * @brief ShapShupMainView
@@ -28,23 +28,23 @@ typedef struct ShapShupMainView ShapShupMainView;
  * @param context 
  */
 void shapshup_main_view_set_callback(
-    ShapShupMainView* instance,
-    ShapShupMainViewCallback callback,
-    void* context);
+        ShapShupMainView *instance,
+        ShapShupMainViewCallback callback,
+        void *context);
 
 /**
  * @brief shapshup_main_view_alloc
  * 
  * @return ShapShupMainView* 
  */
-ShapShupMainView* shapshup_main_view_alloc();
+ShapShupMainView *shapshup_main_view_alloc();
 
 /**
  * @brief shapshup_main_view_free
  * 
  * @param instance 
  */
-void shapshup_main_view_free(ShapShupMainView* instance);
+void shapshup_main_view_free(ShapShupMainView *instance);
 
 /**
  * @brief shapshup_main_view_get_view
@@ -52,14 +52,14 @@ void shapshup_main_view_free(ShapShupMainView* instance);
  * @param instance ShapShupMainView*
  * @return View* 
  */
-View* shapshup_main_view_get_view(ShapShupMainView* instance);
+View *shapshup_main_view_get_view(ShapShupMainView *instance);
 
 /**
  * @brief shapshup_main_view_check_alert
  * 
  * @param instance 
  */
-void shapshup_main_view_check_alert(ShapShupMainView* instance);
+void shapshup_main_view_check_alert(ShapShupMainView *instance);
 
 /**
  * @brief shapshup_main_view_load_file
@@ -68,7 +68,7 @@ void shapshup_main_view_check_alert(ShapShupMainView* instance);
  * @param name const char*
  * @return ShapShupFileResults 
  */
-ShapShupFileResults shapshup_main_view_load_file(ShapShupMainView* instance, const char* name);
+ShapShupFileResults shapshup_main_view_load_file(ShapShupMainView *instance, const char *name);
 
 /**
  * @brief shapshup_main_view_no_file
@@ -77,4 +77,4 @@ ShapShupFileResults shapshup_main_view_load_file(ShapShupMainView* instance, con
  * @return true 
  * @return false 
  */
-bool shapshup_main_view_no_file(ShapShupMainView* instance);
+bool shapshup_main_view_no_file(ShapShupMainView *instance);

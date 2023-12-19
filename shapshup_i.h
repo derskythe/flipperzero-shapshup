@@ -82,23 +82,23 @@ typedef enum {
  */
 struct ShapShupState {
     // GUI elements
-    NotificationApp* notifications;
-    Gui* gui;
-    ViewDispatcher* view_dispatcher;
-    ViewStack* view_stack;
-    TextInput* text_input;
-    Popup* popup;
-    Widget* widget;
-    DialogsApp* dialogs;
-    Loading* loading;
+    NotificationApp *notifications;
+    Gui *gui;
+    ViewDispatcher *view_dispatcher;
+    ViewStack *view_stack;
+    TextInput *text_input;
+    Popup *popup;
+    Widget *widget;
+    DialogsApp *dialogs;
+    Loading *loading;
 
     char text_store[SHAPSHUP_MAX_LEN_NAME];
-    FuriString* file_path;
+    FuriString *file_path;
 
-    ShapShupMainView* view_main; /** View main, default view*/
+    ShapShupMainView *view_main; /** View main, default view*/
     ShapShupView current_view; /** @enum ShapShupView for track enums */
-    SceneManager* scene_manager; /** Scene manager*/
-    Storage* storage; /** Storage pointer */
+    SceneManager *scene_manager; /** Scene manager*/
+    Storage *storage; /** Storage pointer */
 };
 
 /**
@@ -107,18 +107,18 @@ struct ShapShupState {
  * @param context 
  * @param show 
  */
-void shapshup_show_loading_popup(void* context, bool show);
+void shapshup_show_loading_popup(void *context, bool show);
 
 /**
  * @brief shapshup_text_input_callback
  * 
  * @param context 
  */
-void shapshup_text_input_callback(void* context);
+void shapshup_text_input_callback(void *context);
 
 /**
  * @brief shapshup_popup_closed_callback
  * 
  * @param context 
  */
-void shapshup_popup_closed_callback(void* context);
+void shapshup_popup_closed_callback(void *context);

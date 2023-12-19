@@ -13,7 +13,7 @@
  * @param canvas Canvas* 
  * @param str caption of button
  */
-void elements_button_top_left(Canvas* canvas, const char* str);
+void elements_button_top_left(Canvas *canvas, const char *str);
 
 /**
  * @brief draw button in top right corner of screen
@@ -22,4 +22,4 @@ void elements_button_top_left(Canvas* canvas, const char* str);
  * @param canvas Canvas*
  * @param str caption of button
  */
-void elements_button_top_right(Canvas* canvas, const char* str);
+void elements_button_top_right(Canvas *canvas, const char *str);
