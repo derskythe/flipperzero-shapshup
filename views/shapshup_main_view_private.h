@@ -8,17 +8,17 @@
 #include <gui/icon.h>
 #include <m-array.h>
 
-#define STATUS_BAR_Y_SHIFT 11
-#define STATUS_BAR_INFO_SHIFT 9
-#define SCALE_STEP 0.2f
-#define SHAPSHUP_DEFAULT_SCALE_STEP 1.00f
-#define SHAPSHUP_TOP_SCALE 13
-#define SHAPSHUP_BOTTOM_SCALE 40
-#define SHAPSHUP_CHART_LOWEST_POINT 39
+#define STATUS_BAR_Y_SHIFT           11
+#define STATUS_BAR_INFO_SHIFT        9
+#define SCALE_STEP                   0.2f
+#define SHAPSHUP_DEFAULT_SCALE_STEP  1.00f
+#define SHAPSHUP_TOP_SCALE           13
+#define SHAPSHUP_BOTTOM_SCALE        40
+#define SHAPSHUP_CHART_LOWEST_POINT  39
 #define SHAPSHUP_CHART_HIGHEST_POINT 20
-#define SCREEN_WIDTH 128
-#define SHAPSHUP_ALERT_DEFAULT_TTL 150
-#define SHAPSHUP_SCALE_MIN_VALUE 0.1
+#define SCREEN_WIDTH                 128
+#define SHAPSHUP_ALERT_DEFAULT_TTL   150
+#define SHAPSHUP_SCALE_MIN_VALUE     0.1f
 
 /**
  * @brief ShapShupShapeItem
@@ -36,24 +36,24 @@ typedef struct {
 
 /**
  * @brief Construct a new array def object
- * 
+ *
  */
 ARRAY_DEF(ShapShupShapeItemArray, ShapShupShapeItem, M_POD_OPLIST)
 
 /**
  * @brief init array
- * 
+ *
  */
 #define M_OPL_ShapShupShapeItemArray_t() ARRAY_OPLIST(ShapShupShapeItemArray, M_POD_OPLIST)
 
 /**
  * @brief ShapShupShapeStruct
  * ShapShupShapeItemArray_t data
- * 
+ *
  */
 typedef struct {
     ShapShupShapeItemArray_t data;
-} ShapShupShapeStruct;
+} ShapShupShapeList;
 
 /**
  * @brief ShapShupMainView
@@ -65,18 +65,18 @@ typedef struct {
  * ShapShupShapeStruct* shape_list;
  * uint8_t count_shapes;
  * void* context;
- * 
+ *
  */
 struct ShapShupMainView {
-    View *view;
+    View* view;
     ShapShupMainViewCallback callback;
-    ShapShupRawFile *raw_file;
+    ShapShupRawFile* raw_file;
     uint64_t offset;
     float scale;
-    ShapShupShapeStruct *shape_list;
+    ShapShupShapeList* shape_list;
     uint8_t count_shapes;
     uint64_t alert_dismiss_time;
-    void *context;
+    void* context;
 };
 
 /**
@@ -90,7 +90,7 @@ struct ShapShupMainView {
  * ShapShupRawFile* raw_file;
  * ShapShupShapeStruct* shape_list;
  * uint8_t count_shapes;
- * 
+ *
  */
 typedef struct {
     bool rssi_history_end;
@@ -99,8 +99,8 @@ typedef struct {
     uint64_t calc_total_len;
     bool is_ms;
     float scale;
-    ShapShupRawFile *raw_file;
-    ShapShupShapeStruct *shape_list;
+    ShapShupRawFile* raw_file;
+    ShapShupShapeList* shape_list;
     uint8_t count_shapes;
     uint64_t alert_dismiss_time;
     char alert_text[SHAPSHUP_TEXT_STORE_SIZE];
@@ -108,105 +108,105 @@ typedef struct {
 
 /**
  * @brief shapshup_main_view_show_alert
- * 
+ *
  * @param instance ShapShupMainView*
  * @param text to show
  * @param ttl TTL value
  */
-void shapshup_main_view_show_alert(ShapShupMainView *instance, const char *text, uint32_t ttl);
+void shapshup_main_view_show_alert(ShapShupMainView* instance, const char* text, uint32_t ttl);
 
 /**
  * @brief shapshup_main_view_reset_alert
- * 
+ *
  * @param instance ShapShupMainView*
  */
-void shapshup_main_view_reset_alert(ShapShupMainView *instance);
+void shapshup_main_view_reset_alert(ShapShupMainView* instance);
 
 /**
  * @brief shapshup_main_view_draw_alert_if_needed
- * 
- * @param canvas 
- * @param model 
+ *
+ * @param canvas
+ * @param model
  */
-void shapshup_main_view_draw_alert_if_needed(Canvas *canvas, ShapShupMainViewModel *model);
+void shapshup_main_view_draw_alert_if_needed(Canvas* canvas, ShapShupMainViewModel* model);
 
 /**
  * @brief shapshup_main_view_draw
- * 
+ *
  * @param canvas Canvas*
  * @param model  ShapShupMainViewModel*
  */
-void shapshup_main_view_draw(Canvas *canvas, ShapShupMainViewModel *model);
+void shapshup_main_view_draw(Canvas* canvas, ShapShupMainViewModel* model);
 
 /**
  * @brief shapshup_main_view_draw_scale
- * 
+ *
  * @param canvas Canvas*
  * @param model  ShapShupMainViewModel*
  */
-void shapshup_main_view_draw_scale(Canvas *canvas, ShapShupMainViewModel *model);
+void shapshup_main_view_draw_scale(Canvas* canvas, ShapShupMainViewModel* model);
 
 /**
  * @brief calc_offset_per_page
- * 
- * @param total 
- * @param min_len 
- * @param scale 
- * @return uint64_t 
+ *
+ * @param total
+ * @param min_len
+ * @param scale
+ * @return uint64_t
  */
 uint64_t calc_offset_per_page(uint64_t total, uint64_t min_len, float scale);
 
 /**
  * @brief format_number
- * 
+ *
  * @param n numbver
  * @param out output value
  */
-void format_number(uint64_t n, char *out);
+void format_number(uint64_t n, char* out);
 
 /**
  * @brief format frequency to show
- * 
+ *
  * @param frequency frequency
  * @param output_buffer output value
  */
-void format_frequency(uint32_t frequency, char *output_buffer);
+void format_frequency(uint32_t frequency, char* output_buffer);
 
 /**
  * @brief shapshup_main_view_input
- * 
- * @param event 
- * @param context 
- * @return true 
- * @return false 
+ *
+ * @param event
+ * @param context
+ * @return true
+ * @return false
  */
-bool shapshup_main_view_input(InputEvent *event, void *context);
+bool shapshup_main_view_input(InputEvent* event, void* context);
 
 /**
  * @brief shapshup_main_view_enter
- * 
- * @param context 
+ *
+ * @param context
  */
-void shapshup_main_view_enter(void *context);
+void shapshup_main_view_enter(void* context);
 
 /**
  * @brief shapshup_main_view_exit
- * 
- * @param context 
+ *
+ * @param context
  */
-void shapshup_main_view_exit(void *context);
+void shapshup_main_view_exit(void* context);
 
 /**
  * @brief shapshup_main_view_array_reset
- * 
+ *
  * @param instance ShapShupMainView*
  */
-void shapshup_main_view_array_reset(ShapShupMainView *instance);
+void shapshup_main_view_array_reset(ShapShupMainView* instance);
 
 /**
  * @brief shapshup_main_view_create_shapes
- * 
+ *
  * @param instance ShapShupMainView*
- * @param offset_per_page 
+ * @param offset_per_page
  */
-void shapshup_main_view_create_shapes(ShapShupMainView *instance, uint64_t offset_per_page);
+void shapshup_main_view_create_shapes(ShapShupMainView* instance, uint64_t offset_per_page);

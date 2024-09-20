@@ -12,29 +12,29 @@
 
 #include "shapshup_i.h"
 
-#define TAG "ShapShupApp"
+#define TAG         "ShapShupApp"
 #define TICK_PERIOD 500
 
-static bool shapshup_custom_event_callback(void *context, uint32_t event) {
+static bool shapshup_custom_event_callback(void* context, uint32_t event) {
     furi_assert(context);
-    ShapShupState *instance = context;
+    ShapShupState* instance = (ShapShupState*)context;
     return scene_manager_handle_custom_event(instance->scene_manager, event);
 }
 
-static bool shapshup_back_event_callback(void *context) {
+static bool shapshup_back_event_callback(void* context) {
     furi_assert(context);
-    ShapShupState *instance = context;
+    ShapShupState* instance = (ShapShupState*)context;
     return scene_manager_handle_back_event(instance->scene_manager);
 }
 
-static void shapshup_tick_event_callback(void *context) {
+static void shapshup_tick_event_callback(void* context) {
     furi_assert(context);
-    ShapShupState *instance = context;
+    ShapShupState* instance = (ShapShupState*)context;
     scene_manager_handle_tick_event(instance->scene_manager);
 }
 
-ShapShupState *shapshup_alloc() {
-    ShapShupState *instance = malloc(sizeof(ShapShupState));
+ShapShupState* shapshup_alloc() {
+    ShapShupState* instance = malloc(sizeof(ShapShupState));
 
     instance->file_path = furi_string_alloc();
     instance->scene_manager = scene_manager_alloc(&shapshup_scene_handlers, instance);
@@ -43,14 +43,13 @@ ShapShupState *shapshup_alloc() {
     instance->gui = furi_record_open(RECORD_GUI);
     instance->storage = furi_record_open(RECORD_STORAGE);
 
-    view_dispatcher_enable_queue(instance->view_dispatcher);
     view_dispatcher_set_event_callback_context(instance->view_dispatcher, instance);
     view_dispatcher_set_custom_event_callback(
-            instance->view_dispatcher, shapshup_custom_event_callback);
+        instance->view_dispatcher, shapshup_custom_event_callback);
     view_dispatcher_set_navigation_event_callback(
-            instance->view_dispatcher, shapshup_back_event_callback);
+        instance->view_dispatcher, shapshup_back_event_callback);
     view_dispatcher_set_tick_event_callback(
-            instance->view_dispatcher, shapshup_tick_event_callback, TICK_PERIOD);
+        instance->view_dispatcher, shapshup_tick_event_callback, TICK_PERIOD);
 
     //Dialog
     instance->dialogs = furi_record_open(RECORD_DIALOGS);
@@ -61,36 +60,36 @@ ShapShupState *shapshup_alloc() {
     // TextInput
     instance->text_input = text_input_alloc();
     view_dispatcher_add_view(
-            instance->view_dispatcher,
-            ShapShupViewTextInput,
-            text_input_get_view(instance->text_input));
+        instance->view_dispatcher,
+        ShapShupViewTextInput,
+        text_input_get_view(instance->text_input));
 
     // Custom Widget
     instance->widget = widget_alloc();
     view_dispatcher_add_view(
-            instance->view_dispatcher, ShapShupViewWidget, widget_get_view(instance->widget));
+        instance->view_dispatcher, ShapShupViewWidget, widget_get_view(instance->widget));
 
     // Popup
     instance->popup = popup_alloc();
     view_dispatcher_add_view(
-            instance->view_dispatcher, ShapShupViewPopup, popup_get_view(instance->popup));
+        instance->view_dispatcher, ShapShupViewPopup, popup_get_view(instance->popup));
 
     // Loading
     instance->loading = loading_alloc();
     view_dispatcher_add_view(
-            instance->view_dispatcher, ShapShupViewLoading, loading_get_view(instance->loading));
+        instance->view_dispatcher, ShapShupViewLoading, loading_get_view(instance->loading));
 
     // ViewStack
     instance->view_stack = view_stack_alloc();
     view_dispatcher_add_view(
-            instance->view_dispatcher, ShapShupViewStack, view_stack_get_view(instance->view_stack));
+        instance->view_dispatcher, ShapShupViewStack, view_stack_get_view(instance->view_stack));
 
     // ShapShupMainView
     instance->view_main = shapshup_main_view_alloc();
     view_dispatcher_add_view(
-            instance->view_dispatcher,
-            ShapShupViewMain,
-            shapshup_main_view_get_view(instance->view_main));
+        instance->view_dispatcher,
+        ShapShupViewMain,
+        shapshup_main_view_get_view(instance->view_main));
 
     // Loading
     instance->loading = loading_alloc();
@@ -98,7 +97,7 @@ ShapShupState *shapshup_alloc() {
     return instance;
 }
 
-void shapshup_free(ShapShupState *instance) {
+void shapshup_free(ShapShupState* instance) {
     furi_assert(instance);
 
     // Notifications
@@ -157,11 +156,11 @@ void shapshup_free(ShapShupState *instance) {
     free(instance);
 }
 
-void shapshup_show_loading_popup(void *context, bool show) {
+void shapshup_show_loading_popup(void* context, bool show) {
     furi_assert(context);
-    ShapShupState *instance = context;
+    ShapShupState* instance = (ShapShupState*)context;
 
-    if (show) {
+    if(show) {
         // Raise timer priority so that animations can play
         furi_timer_set_thread_priority(FuriTimerThreadPriorityElevated);
         view_dispatcher_switch_to_view(instance->view_dispatcher, ShapShupViewLoading);
@@ -171,32 +170,32 @@ void shapshup_show_loading_popup(void *context, bool show) {
     }
 }
 
-void shapshup_text_input_callback(void *context) {
+void shapshup_text_input_callback(void* context) {
     furi_assert(context);
-    ShapShupState *instance = context;
+    ShapShupState* instance = (ShapShupState*)context;
     view_dispatcher_send_custom_event(
-            instance->view_dispatcher, ShapShupCustomEventTypeTextEditDone);
+        instance->view_dispatcher, ShapShupCustomEventTypeTextEditDone);
 }
 
-void shapshup_popup_closed_callback(void *context) {
+void shapshup_popup_closed_callback(void* context) {
     furi_assert(context);
-    ShapShupState *instance = context;
+    ShapShupState* instance = (ShapShupState*)context;
     view_dispatcher_send_custom_event(
-            instance->view_dispatcher, ShapShupCustomEventTypePopupClosed);
+        instance->view_dispatcher, ShapShupCustomEventTypePopupClosed);
 }
 
 /**
  * @brief Entrypoint
- * 
- * @param p 
- * @return int32_t 
+ *
+ * @param p
+ * @return int32_t
  */
-int32_t shapshup_app(void *p) {
+int32_t shapshup_app(void* p) {
     UNUSED(p);
 
-    ShapShupState *instance = shapshup_alloc();
+    ShapShupState* instance = shapshup_alloc();
     view_dispatcher_attach_to_gui(
-            instance->view_dispatcher, instance->gui, ViewDispatcherTypeFullscreen);
+        instance->view_dispatcher, instance->gui, ViewDispatcherTypeFullscreen);
     scene_manager_next_scene(instance->scene_manager, ShapshupSceneStart);
     notification_message(instance->notifications, &sequence_display_backlight_on);
 

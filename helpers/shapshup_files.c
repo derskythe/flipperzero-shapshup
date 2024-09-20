@@ -1,18 +1,15 @@
 #include "shapshup_files.h"
-#include "types.h"
-#include "registry.h"
+#include <types.h>
 #include <inttypes.h>
-#include <lib/subghz/types.h>
 #include <stdio.h>
 
 #define TAG "ShapShupFiles"
 #define RAW_KEY_NAME "RAW_Data"
-
-const size_t buffer_size = 32;
+#define FORMAT_BUFFER_SIZE 32
 
 static bool stream_read_valid_key_shapshup(Stream *stream, FuriString *key) {
     furi_string_reset(key);
-    uint8_t buffer[buffer_size];
+    uint8_t buffer[FORMAT_BUFFER_SIZE];
 
     bool found = false;
     bool error = false;
@@ -20,8 +17,10 @@ static bool stream_read_valid_key_shapshup(Stream *stream, FuriString *key) {
     bool new_line = true;
 
     while (true) {
-        size_t was_read = stream_read(stream, buffer, buffer_size);
-        if (was_read == 0) break;
+        size_t was_read = stream_read(stream, buffer, FORMAT_BUFFER_SIZE);
+        if (was_read == 0) {
+            break;
+        }
 
         for (size_t i = 0; i < was_read; i++) {
             uint8_t data = buffer[i];
@@ -51,7 +50,7 @@ static bool stream_read_valid_key_shapshup(Stream *stream, FuriString *key) {
                     if (accumulate) {
                         // we found the delimiter, move the rw pointer to the delimiter location
                         // and signal that we have found something
-                        if (!stream_seek(stream, i - was_read, StreamOffsetFromCurrent)) {
+                        if (!stream_seek(stream, (int32_t )(i - was_read), StreamOffsetFromCurrent)) {
                             error = true;
                             break;
                         }
@@ -70,7 +69,9 @@ static bool stream_read_valid_key_shapshup(Stream *stream, FuriString *key) {
             }
         }
 
-        if (found || error) break;
+        if (found || error) {
+            break;
+        }
     }
 
     return found;
@@ -109,15 +110,14 @@ static bool stream_read_value_shapshup(Stream *stream, FuriString *value, bool *
     enum {
         LeadingSpace, ReadValue, TrailingSpace
     } state = LeadingSpace;
-    const size_t buffer_len = 32;
-    uint8_t buffer[buffer_len];
+    uint8_t buffer[FORMAT_BUFFER_SIZE];
     bool result = false;
     bool error = false;
 
     furi_string_reset(value);
 
     while (true) {
-        size_t was_read = stream_read(stream, buffer, buffer_len);
+        size_t was_read = stream_read(stream, buffer, FORMAT_BUFFER_SIZE);
 
         if (was_read == 0) {
             if (state != LeadingSpace && stream_eof(stream)) {
@@ -128,14 +128,14 @@ static bool stream_read_value_shapshup(Stream *stream, FuriString *value, bool *
             }
         }
 
-        for (uint16_t i = 0; i < was_read; i++) {
+        for (size_t i = 0; i < was_read; i++) {
             const uint8_t data = buffer[i];
 
             if (state == LeadingSpace) {
                 if (is_space_shapshup((char) data)) {
                     continue;
                 } else if (data == flipper_format_eoln) {
-                    stream_seek(stream, i - was_read, StreamOffsetFromCurrent);
+                    stream_seek(stream, (int32_t )(i - was_read), StreamOffsetFromCurrent);
                     error = true;
                     break;
                 } else {
@@ -146,7 +146,7 @@ static bool stream_read_value_shapshup(Stream *stream, FuriString *value, bool *
                 if (is_space_shapshup((char) data)) {
                     state = TrailingSpace;
                 } else if (data == flipper_format_eoln) {
-                    if (!stream_seek(stream, i - was_read, StreamOffsetFromCurrent)) {
+                    if (!stream_seek(stream, (int32_t )(i - was_read), StreamOffsetFromCurrent)) {
                         error = true;
                     } else {
                         result = true;
@@ -159,7 +159,7 @@ static bool stream_read_value_shapshup(Stream *stream, FuriString *value, bool *
             } else if (state == TrailingSpace) {
                 if (is_space_shapshup((char) data)) {
                     continue;
-                } else if (!stream_seek(stream, i - was_read, StreamOffsetFromCurrent)) {
+                } else if (!stream_seek(stream, (int32_t )(i - was_read), StreamOffsetFromCurrent)) {
                     error = true;
                 } else {
                     *last = (data == flipper_format_eoln);
@@ -169,7 +169,9 @@ static bool stream_read_value_shapshup(Stream *stream, FuriString *value, bool *
             }
         }
 
-        if (error || result) break;
+        if (error || result) {
+            break;
+        }
     }
 
     return result;
@@ -290,7 +292,7 @@ ShapShupRawFile *load_file_shapshup(const char *file_path) {
         instance->result = ShapShupFileResultOk;
     } while (false);
 
-    uint64_t min_len = 0 - 1;
+    uint64_t min_len = 0 - 1; // 0XFFFFFFFFFFFFFFFF
     uint64_t max_len = 0;
 
     if (instance->result == ShapShupFileResultOk) {
@@ -335,24 +337,36 @@ ShapShupRawFile *load_file_shapshup(const char *file_path) {
 }
 
 void clean_raw_values(ShapShupRawFile *raw_file) {
-    if (raw_file != NULL) {
-        array_raw_clear(raw_file->values);
-        free(raw_file);
-        raw_file = NULL;
+    if(raw_file == NULL) {
+        return;
     }
+    array_raw_clear(raw_file->values);
+    free(raw_file);
+    raw_file = NULL;
 }
 
+static char* const error_ok = "OK";
+static char* const error_open_file = "Error open file";
+static char* const error_missing_or_incorrect_header = "Missing or incorrect header";
+static char* const error_type_or_version_mismatch = "Type or version mismatch";
+static char* const error_not_raw_file = "Not RAW file";
+static char* const error_missing_frequency = "Missing Frequency";
+static char* const error_missing_preset = "Missing Preset";
+static char* const error_missing_protocol = "Missing Protocol";
+static char* const error_key_not_found = "Key not found";
+static char* const error_unknown = "Unknown error";
+
 static const char *shapshup_file_result_descriptions[] = {
-        [ShapShupFileResultOk] = "OK",
-        [ShapShupFileResultOpenError] = "Error open file",
-        [ShapShupFileResultIncorrectHeader] = "Missing or incorrect header",
-        [ShapShupFileResultTypeOfVersionMismatch] = "Type or version mismatch",
-        [ShapShupFileResultNotRawFile] = "Not RAW file",
-        [ShapShupFileResultMissingFrequency] = "Missing Frequency",
-        [ShapShupFileResultMissingPreset] = "Missing Preset",
-        [ShapShupFileResultMissingProtocol] = "Missing Protocol",
-        [ShapShupFileResultKeyNotFound] = "Key not found",
-        [ShapShupFileResultUnknown] = "Unknown error",
+        [ShapShupFileResultOk] = error_ok,
+        [ShapShupFileResultOpenError] = error_open_file,
+        [ShapShupFileResultIncorrectHeader] = error_missing_or_incorrect_header,
+        [ShapShupFileResultTypeOfVersionMismatch] = error_type_or_version_mismatch,
+        [ShapShupFileResultNotRawFile] = error_not_raw_file,
+        [ShapShupFileResultMissingFrequency] = error_missing_frequency,
+        [ShapShupFileResultMissingPreset] = error_missing_preset,
+        [ShapShupFileResultMissingProtocol] = error_missing_protocol,
+        [ShapShupFileResultKeyNotFound] = error_key_not_found,
+        [ShapShupFileResultUnknown] = error_unknown,
 };
 
 const char *shapshup_files_result_description(ShapShupFileResults index) {

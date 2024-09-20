@@ -4,9 +4,9 @@
 #include <furi_hal.h>
 #include <input/input.h>
 
-#include "lib/toolbox/path.h"
-#include <notification/notification.h>
-#include <notification/notification_messages.h>
+#include <lib/toolbox/path.h>
+#include <lib/toolbox/stream/stream.h>
+
 #include <string.h>
 
 #include <gui/gui.h>
@@ -17,6 +17,7 @@
 #include <gui/modules/popup.h>
 #include <gui/modules/widget.h>
 #include <gui/modules/loading.h>
+#include <assets_icons.h>
 
 #include <dialogs/dialogs.h>
 
@@ -24,10 +25,9 @@
 #include <lib/subghz/transmitter.h>
 #include <lib/subghz/receiver.h>
 #include <lib/subghz/environment.h>
+
 #include <notification/notification.h>
 #include <notification/notification_messages.h>
-
-#include <lib/toolbox/stream/stream.h>
 
 #include "shapshup.h"
 #include "scenes/shapshup_scene.h"
@@ -36,34 +36,34 @@
 
 /**
  * @brief max size of text field
- * 
+ *
  */
 #define SHAPSHUP_TEXT_STORE_SIZE 255
 /**
  * @brief max size of filename
- * 
+ *
  */
 #define SHAPSHUP_MAX_LEN_NAME 64
 /**
  * @brief default directory to show
- * 
+ *
  */
 #define SHAPSHUP_PATH EXT_PATH("subghz")
 /**
  * @brief filename extension to show
- * 
+ *
  */
 #define SHAPSHUP_FILE_EXT ".sub"
 
 /**
  * @brief used for DEBUG purpose
- * 
+ *
  */
 //#define SHAPSHUP_FAST_TRACK false
 
 /**
  * @brief view mode
- * 
+ *
  */
 typedef enum {
     ShapShupViewNone,
@@ -78,7 +78,7 @@ typedef enum {
 
 /**
  * @brief main state of app
- * 
+ *
  */
 struct ShapShupState {
     // GUI elements
@@ -103,22 +103,22 @@ struct ShapShupState {
 
 /**
  * @brief shapshup_show_loading_popup
- * 
- * @param context 
- * @param show 
+ *
+ * @param context
+ * @param show
  */
 void shapshup_show_loading_popup(void *context, bool show);
 
 /**
  * @brief shapshup_text_input_callback
- * 
- * @param context 
+ *
+ * @param context
  */
 void shapshup_text_input_callback(void *context);
 
 /**
  * @brief shapshup_popup_closed_callback
- * 
- * @param context 
+ *
+ * @param context
  */
 void shapshup_popup_closed_callback(void *context);
